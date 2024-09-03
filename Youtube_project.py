@@ -690,136 +690,142 @@ if rad == "Data viewing":
 
 if rad == "Sql queries":
 
-    st.title(":[Sql queries]")
+    st.title(":green[Sql queries]")
 
-    mydb = mysql.connector.connect(host="127.0.0.1",
-                            user="root",
-                            password="root",
-                            database="youtube", 
-                            port="3306"
-                            )
-    cursor=mydb.cursor()
+    try:
 
+        mydb = mysql.connector.connect(host="127.0.0.1",
+                                user="root",
+                                password="root",
+                                database="youtube", 
+                                port="3306"
+                                )
+        cursor=mydb.cursor()
+    
+    
+        question=st.selectbox("select your question",("1.What are the names of all the videos and their corresponding channels?",
+                                                    "2.Which channels have the most number of videos, and how many videos do they have?",
+                                                    "3.What are the top 10 most viewed videos and their respective channels?",
+                                                    "4.How many comments were made on each video, and what are their corresponding video names?",
+                                                    "5.Which videos have the highest number of likes, and what are their corresponding channel names?",
+                                                    "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?",
+                                                    "7.What is the total number of views for each channel, and what are their corresponding channel names?",
+                                                    "8.What are the names of all the channels that have published videos in the year 2022?",
+                                                    "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?",
+                                                    "10.Which videos have the highest number of comments, and what are their corresponding channel names?"))
+    
+        if question == "1.What are the names of all the videos and their corresponding channels?":
+            query1='''select title,channel_name from videos '''
+            cursor.execute(query1)
+    
+            t1=cursor.fetchall()
+    
+            q1=pd.DataFrame(t1,columns=["videos","channel"])
+    
+            st.write(q1)
+    
+        elif question == "2.Which channels have the most number of videos, and how many videos do they have?":
+            query2='''select channel_name,Total_videos from youtube.channels where Total_videos = (select max(Total_videos) from youtube.channels)'''
+            cursor.execute(query2)
+    
+            t2=cursor.fetchall()
+    
+            q2=pd.DataFrame(t2,columns=["channel_name","Total_videos"])
+    
+            st.write(q2)
+    
+        elif question == "3.What are the top 10 most viewed videos and their respective channels?":
+            query3='''select video_id,title,views,channel_name from videos order by views desc limit 10;'''
+            cursor.execute(query3)
+    
+            t3=cursor.fetchall()
+    
+            q3=pd.DataFrame(t3,columns=["video_id","title","views","channel_name"])
+    
+            st.write(q3) 
+    
+        elif question == "4.How many comments were made on each video, and what are their corresponding video names?":
+            query4='''select comments,title as video_title from videos;'''
+            cursor.execute(query4)
+    
+            t4=cursor.fetchall()
+    
+            q4=pd.DataFrame(t4,columns=["comments","title"])
+    
+            st.write(q4)
+    
+        elif question == "5.Which videos have the highest number of likes, and what are their corresponding channel names?":
+            query5='''select likes as Highest_likes,title as videotitle,channel_name from videos order by likes desc limit 1;'''
+            cursor.execute(query5)
+    
+            t5=cursor.fetchall()
+    
+            q5=pd.DataFrame(t5,columns=["Highest_likes","video_title","channel_name"])
+    
+            st.write(q5)
+    
+        elif question == "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?":
+            query6='''select likes as likecount,title as video_title from videos;'''
+            cursor.execute(query6)
+    
+            t6=cursor.fetchall()
+    
+            q6=pd.DataFrame(t6,columns=["likecount","video_title"])
+    
+            st.write(q6)
+    
+        elif question == "7.What is the total number of views for each channel, and what are their corresponding channel names?":
+            query7='''select channel_name,sum(views) as total_views from videos group by channel_name;'''
+            cursor.execute(query7)
+    
+            t7=cursor.fetchall()
+    
+            q7=pd.DataFrame(t7,columns=["channel_name","total_views"])
+    
+            st.write(q7)
+    
+        elif question == "8.What are the names of all the channels that have published videos in the year 2022?":
+            query8='''select video_id as video_title,channel_name,published_date from videos where year(published_date)=2022;'''
+            cursor.execute(query8)
+    
+            t8=cursor.fetchall()
+    
+            q8=pd.DataFrame(t8,columns=["video_title","channel_name","published_date"])
+            
+            st.write(q8)
+    
+        elif question == "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?":
+            query9='''SELECT channel_name, round(AVG(TIME_TO_SEC(duration))/60,2) Average_duration_minutes FROM  videos GROUP BY channel_name;'''
+            cursor.execute(query9)
+    
+            t9=cursor.fetchall()
+    
+            q9=pd.DataFrame(t9,columns=["channel_name","Average_duration_minutes"])
+    
+            T9=[]
+            for index,row in q9.iterrows():
+                channel_title=row["channel_name"]
+                average_duration_min=row["Average_duration_minutes"]
+                average_duration_str=str(average_duration_min)
+                T9.append(dict(channel_title=channel_title,average_duration_min=average_duration_str)) 
+            x9=pd.DataFrame(T9)
+    
+            st.write(x9) 
+    
+        elif question == "10.Which videos have the highest number of comments, and what are their corresponding channel names?":
+            query10='''select c.video_id,count(c.comment_id) as Highest_comment,v.channel_name from comments as c join videos as v on 
+                        c.video_id=v.video_id group by c.video_id order by count(c.comment_id) desc limit 1;'''
+            cursor.execute(query10)
+    
+            t10=cursor.fetchall()
+    
+            q10=pd.DataFrame(t10,columns=["video_id","Highest_comment","channel_name"])
+            
+            st.write(q10)
 
-    question=st.selectbox("select your question",("1.What are the names of all the videos and their corresponding channels?",
-                                                "2.Which channels have the most number of videos, and how many videos do they have?",
-                                                "3.What are the top 10 most viewed videos and their respective channels?",
-                                                "4.How many comments were made on each video, and what are their corresponding video names?",
-                                                "5.Which videos have the highest number of likes, and what are their corresponding channel names?",
-                                                "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?",
-                                                "7.What is the total number of views for each channel, and what are their corresponding channel names?",
-                                                "8.What are the names of all the channels that have published videos in the year 2022?",
-                                                "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?",
-                                                "10.Which videos have the highest number of comments, and what are their corresponding channel names?"))
+except:
+  print("Local DB connection")
 
-    if question == "1.What are the names of all the videos and their corresponding channels?":
-        query1='''select title,channel_name from videos '''
-        cursor.execute(query1)
-
-        t1=cursor.fetchall()
-
-        q1=pd.DataFrame(t1,columns=["videos","channel"])
-
-        st.write(q1)
-
-    elif question == "2.Which channels have the most number of videos, and how many videos do they have?":
-        query2='''select channel_name,Total_videos from youtube.channels where Total_videos = (select max(Total_videos) from youtube.channels)'''
-        cursor.execute(query2)
-
-        t2=cursor.fetchall()
-
-        q2=pd.DataFrame(t2,columns=["channel_name","Total_videos"])
-
-        st.write(q2)
-
-    elif question == "3.What are the top 10 most viewed videos and their respective channels?":
-        query3='''select video_id,title,views,channel_name from videos order by views desc limit 10;'''
-        cursor.execute(query3)
-
-        t3=cursor.fetchall()
-
-        q3=pd.DataFrame(t3,columns=["video_id","title","views","channel_name"])
-
-        st.write(q3) 
-
-    elif question == "4.How many comments were made on each video, and what are their corresponding video names?":
-        query4='''select comments,title as video_title from videos;'''
-        cursor.execute(query4)
-
-        t4=cursor.fetchall()
-
-        q4=pd.DataFrame(t4,columns=["comments","title"])
-
-        st.write(q4)
-
-    elif question == "5.Which videos have the highest number of likes, and what are their corresponding channel names?":
-        query5='''select likes as Highest_likes,title as videotitle,channel_name from videos order by likes desc limit 1;'''
-        cursor.execute(query5)
-
-        t5=cursor.fetchall()
-
-        q5=pd.DataFrame(t5,columns=["Highest_likes","video_title","channel_name"])
-
-        st.write(q5)
-
-    elif question == "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?":
-        query6='''select likes as likecount,title as video_title from videos;'''
-        cursor.execute(query6)
-
-        t6=cursor.fetchall()
-
-        q6=pd.DataFrame(t6,columns=["likecount","video_title"])
-
-        st.write(q6)
-
-    elif question == "7.What is the total number of views for each channel, and what are their corresponding channel names?":
-        query7='''select channel_name,sum(views) as total_views from videos group by channel_name;'''
-        cursor.execute(query7)
-
-        t7=cursor.fetchall()
-
-        q7=pd.DataFrame(t7,columns=["channel_name","total_views"])
-
-        st.write(q7)
-
-    elif question == "8.What are the names of all the channels that have published videos in the year 2022?":
-        query8='''select video_id as video_title,channel_name,published_date from videos where year(published_date)=2022;'''
-        cursor.execute(query8)
-
-        t8=cursor.fetchall()
-
-        q8=pd.DataFrame(t8,columns=["video_title","channel_name","published_date"])
-        
-        st.write(q8)
-
-    elif question == "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?":
-        query9='''SELECT channel_name, round(AVG(TIME_TO_SEC(duration))/60,2) Average_duration_minutes FROM  videos GROUP BY channel_name;'''
-        cursor.execute(query9)
-
-        t9=cursor.fetchall()
-
-        q9=pd.DataFrame(t9,columns=["channel_name","Average_duration_minutes"])
-
-        T9=[]
-        for index,row in q9.iterrows():
-            channel_title=row["channel_name"]
-            average_duration_min=row["Average_duration_minutes"]
-            average_duration_str=str(average_duration_min)
-            T9.append(dict(channel_title=channel_title,average_duration_min=average_duration_str)) 
-        x9=pd.DataFrame(T9)
-
-        st.write(x9) 
-
-    elif question == "10.Which videos have the highest number of comments, and what are their corresponding channel names?":
-        query10='''select c.video_id,count(c.comment_id) as Highest_comment,v.channel_name from comments as c join videos as v on 
-                    c.video_id=v.video_id group by c.video_id order by count(c.comment_id) desc limit 1;'''
-        cursor.execute(query10)
-
-        t10=cursor.fetchall()
-
-        q10=pd.DataFrame(t10,columns=["video_id","Highest_comment","channel_name"])
-        
-        st.write(q10)
 
 
         
