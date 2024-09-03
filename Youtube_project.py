@@ -823,7 +823,9 @@ if rad == "Sql queries":
             st.write(q10)
 
     except mysql.connector.Error as err:
-        st.error(f"Error: {err} Local DB not connected")
+        st.error(f"Error: {err}")
+        st.write("")
+        st.title(" Local DB not connected")
 
 
 
