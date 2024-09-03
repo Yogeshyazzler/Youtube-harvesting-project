@@ -693,7 +693,6 @@ if rad == "Sql queries":
     st.title(":green[Sql queries]")
 
     try:
-
         mydb = mysql.connector.connect(host="127.0.0.1",
                                 user="root",
                                 password="root",
@@ -824,7 +823,7 @@ if rad == "Sql queries":
             st.write(q10)
 
     except:
-      print("Local DB connection, Npt available")
+        print("Local DB connection, Npt available")
 
 
 
