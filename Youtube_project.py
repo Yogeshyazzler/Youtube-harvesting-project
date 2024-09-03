@@ -450,23 +450,20 @@ from PIL import Image
 import base64
 
 # Function to set the background image
-def set_background(image_file):
-    with open(image_file, "rb") as file:
-        encoded_string = base64.b64encode(file.read()).decode()
+def set_background_color(color):
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background-image: url(data:image/{"jpg"};base64,{encoded_string});
-            background-size: cover;
+            background-color: {color};
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
 
-  # Set the background image
-set_background("C:/Users/Mr Yogeshwaran/Downloads/bg.jpg")
+# Set a blue background
+set_background_color("#ADD8E6")
 
 rad=st.sidebar.radio("Navigation",["Home","Data collection","Data storing","Data viewing","Sql queries"])
 
@@ -656,7 +653,13 @@ if rad == "Data storing":
     for ch_data in coll_1.find({},{"_id":0,"channel_information":1}):
         all_channels.append(ch_data["channel_information"]["channel_name"])
 
-    unique_channel=st.selectbox("select the Channel",all_channels)
+    st.markdown("<h1 style='color: green;'>Select the Channel</h1>", unsafe_allow_html=True)
+    unique_channel = st.selectbox("", all_channels)
+
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
 
     st.title(":green[Data storing]")
 
@@ -817,3 +820,10 @@ if rad == "Sql queries":
         q10=pd.DataFrame(t10,columns=["video_id","Highest_comment","channel_name"])
         
         st.write(q10)
+
+
+        
+
+
+
+
