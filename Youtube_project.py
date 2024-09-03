@@ -15,7 +15,6 @@ from dateutil.parser import isoparse
 from isodate import parse_duration
 
 
-
 def api_connect():
     api_id='AIzaSyB1SaoRH6J4x5lKvTtEPH4lj16bWanmy44'
     api_service_name ='youtube'
@@ -59,7 +58,7 @@ def get_video_ids(channel_id):
         request2= youtube.playlistItems().list(
                                                 part="snippet",
                                                 playlistId=playlist_id,
-                                                maxResults=5,
+                                                maxResults=50,
                                                 pageToken=next_page_token)
 
         response3 = request2.execute()
@@ -247,7 +246,6 @@ def playlist_table(channel_name):
     )'''
 
     cursor.execute(create_playlist)
-    print("playlist created")
     mydb.commit()
 
     single_playlist=[]
@@ -446,294 +444,376 @@ def show_comments():
 
     df3=st.dataframe(cmt_list)
 
-st.title(":red[YOUTUBE DATA HARVESTING AND WAREHOUSING]")
-
-if 'sidebar_state' not in st.session_state:
-    st.session_state.sidebar_state = True 
-
-if st.sidebar.title('Skills Learned'):
-    st.session_state.sidebar_state = not st.session_state.sidebar_state
-
-
 import streamlit as st
+import streamlit as st
+from PIL import Image
+import base64
 
-# Define functions to display messages
-def display_python_scripting_message():
-    if st.session_state.python_scripting_message_visible:
-        st.sidebar.write('Utilized python functions,list,dictionary.')
-        st.sidebar.write('Packages used - Pandas')
-    else:
-        st.sidebar.empty()
+# Function to set the background image
+def set_background(image_file):
+    with open(image_file, "rb") as file:
+        encoded_string = base64.b64encode(file.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url(data:image/{"jpg"};base64,{encoded_string});
+            background-size: cover;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-def display_data_collections_message():
-    if st.session_state.data_collections_message_visible:
-        st.sidebar.write('Data collected from Youtube channels')
-    else:
-        st.sidebar.empty()
+  # Set the background image
+set_background("C:/Users/Mr Yogeshwaran/Downloads/bg.jpg")
 
-def display_mongodb_message():
-    if st.session_state.mongodb_message_visible:
-        st.sidebar.write('Data collected from Youtube channesl are stored in Mongo DB')
-        st.sidebar.write('Packages used - Pymongos')
-    else:
-        st.sidebar.empty()
+rad=st.sidebar.radio("Navigation",["Home","Data collection","Data storing","Data viewing","Sql queries"])
 
-def display_api_integration_message():
-    if st.session_state.api_integration_message_visible:
-        st.sidebar.write('Youtube Api is fetched from developer google')
-    else:
-        st.sidebar.empty()
+if rad == "Home":
 
-def display_data_management_message():
-    if st.session_state.data_management_message_visible:
-        st.sidebar.write('The data in mongo db are moved to Mysql for Data Analysis and finding Insights')
-    else:
-        st.sidebar.empty()
-def display_summary_message():
-    if st.session_state.data_summary_message_visible:
-        st.sidebar.write('Youtube-Data-Harvesting-And-Warehousing YouTube Data Harvesting and Warehousing is a project that intends to provide users with the ability to access and analyse data from numerous YouTube channels. SQL, MongoDB, and Streamlit are used in the project to develop a user-friendly application that allows users to retrieve, save, and query YouTube channel and video data.')
-    else:
-        st.sidebar.empty()
+# Add other Streamlit components
+    st.markdown(
+    """
+    <style>
+    .centered-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10vh;  /* Adjust the height as needed */
+    }
+    .centered-title h1 {
+        color: green;
+        white-space: nowrap;  /* Ensure the title stays in a single line */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-# Track the previous and current stages
-previous_stage = None
-current_stage = None
+# Center the title using a div and custom CSS class
+    st.markdown('<div class="centered-title"><h1>YOUTUBE DATA HARVESTING AND WAREHOUSING</h1></div>', unsafe_allow_html=True)
 
-# Initialize session state variables
-if 'python_scripting_message_visible' not in st.session_state:
-    st.session_state.python_scripting_message_visible = False
-if 'data_collections_message_visible' not in st.session_state:
-    st.session_state.data_collections_message_visible = False
-if 'mongodb_message_visible' not in st.session_state:
-    st.session_state.mongodb_message_visible = False
-if 'api_integration_message_visible' not in st.session_state:
-    st.session_state.api_integration_message_visible = False
-if 'data_management_message_visible' not in st.session_state:
-    st.session_state.data_management_message_visible = False
-if 'data_summary_message_visible' not in st.session_state:
-    st.session_state.data_summary_message_visible = False
+    # Custom CSS to style the text box
+    st.markdown(
+        """
+        <style>
+        .white-text-box {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-# Buttons for each caption
-if st.sidebar.button("Python scripting"):
-    if current_stage == "Python scripting":
-        previous_stage, current_stage = None, None
-    else:
-        previous_stage, current_stage = current_stage, "Python scripting"
-        st.session_state.python_scripting_message_visible = not st.session_state.python_scripting_message_visible
-        display_python_scripting_message()
+# Header
+    st.header(":red[Introduction]")
 
-if st.sidebar.button("Data collections"):
-    if current_stage == "Data collections":
-        previous_stage, current_stage = None, None
-    else:
-        previous_stage, current_stage = current_stage, "Data collections"
-        st.session_state.data_collections_message_visible = not st.session_state.data_collections_message_visible
-        display_data_collections_message()
+    # Paragraph inside a white text box
+    st.markdown('<div class="white-text-box">Youtube-Data-Harvesting-And-Warehousing is a project that intends to provide users with the ability to access and analyse data from numerous YouTube channels. SQL, MongoDB, and Streamlit are used in the project to develop a user-friendly application that allows users to retrieve, save, and query YouTube channel and video data.</div>', unsafe_allow_html=True)
+            
 
-if st.sidebar.button("MongoDB"):
-    if current_stage == "MongoDB":
-        previous_stage, current_stage = None, None
-    else:
-        previous_stage, current_stage = current_stage, "MongoDB"
-        st.session_state.mongodb_message_visible = not st.session_state.mongodb_message_visible
-        display_mongodb_message()
+    if 'sidebar_state' not in st.session_state:
+        st.session_state.sidebar_state = True 
 
-if st.sidebar.button("API Integration"):
-    if current_stage == "API Integration":
-        previous_stage, current_stage = None, None
-    else:
-        previous_stage, current_stage = current_stage, "API Integration"
-        st.session_state.api_integration_message_visible = not st.session_state.api_integration_message_visible
-        display_api_integration_message()
+    if st.header(":red[Skills Learned]"):
+        st.session_state.sidebar_state = not st.session_state.sidebar_state
 
-if st.sidebar.button("Data Management"):
-    if current_stage == "Data Management":
-        previous_stage, current_stage = None, None
-    else:
-        previous_stage, current_stage = current_stage, "Data Management"
-        st.session_state.data_management_message_visible = not st.session_state.data_management_message_visible
-        display_data_management_message()
+    # Define functions to display messages
+    def display_python_scripting_message():
+        if st.session_state.python_scripting_message_visible:
+            st.markdown(':red[**Utilized python functions,list,dictionary. Packages used - Pandas**]')
 
-if st.sidebar.button("Summary"):
-    if current_stage == "Summary":
-        previous_stage, current_stage = None, None
-    else:
-        previous_stage, current_stage = current_stage, "Summary"
-        st.session_state.data_summary_message_visible= not st.session_state.data_summary_message_visible
-        display_summary_message()
+        else:
+            st.empty()
+
+    def display_data_collections_message():
+        if st.session_state.data_collections_message_visible:
+            st.write(':red[**Data collected from Youtube channels**]')
+        else:
+            st.empty()
+
+    def display_mongodb_message():
+        if st.session_state.mongodb_message_visible:
+            st.write(':red[**Data collected from Youtube channesl are stored in Mongo DB**]')
+            st.write(':red[**Packages used - Pymongos**]')
+        else:
+            st.sidebar.empty()
+
+    def display_api_integration_message():
+        if st.session_state.api_integration_message_visible:
+            st.write(':red[**Youtube Api is fetched from developer google**]')
+        else:
+            st.empty()
+
+    def display_data_management_message():
+        if st.session_state.data_management_message_visible:
+            st.write(':red[**The data in mongo db are moved to Mysql for Data Analysis and finding Insights**]')
+        else:
+            st.empty()
+    def display_summary_message():
+        if st.session_state.data_summary_message_visible:
+            st.write(':red[**I have learned new skills in data harvesting from YouTube using the YouTube API, storing data in MongoDB, and transferring it to MySQL for analysis. Additionally, I developed sales dashboards and visualized daily lead flow, utilizing Python scripting, Pandas, and Streamlit.**]')
+        else:
+            st.empty()
+
+    # Track the previous and current stages
+    previous_stage = None
+    current_stage = None
+
+    # Initialize session state variables
+    if 'python_scripting_message_visible' not in st.session_state:
+        st.session_state.python_scripting_message_visible = False
+    if 'data_collections_message_visible' not in st.session_state:
+        st.session_state.data_collections_message_visible = False
+    if 'mongodb_message_visible' not in st.session_state:
+        st.session_state.mongodb_message_visible = False
+    if 'api_integration_message_visible' not in st.session_state:
+        st.session_state.api_integration_message_visible = False
+    if 'data_management_message_visible' not in st.session_state:
+        st.session_state.data_management_message_visible = False
+    if 'data_summary_message_visible' not in st.session_state:
+        st.session_state.data_summary_message_visible = False
+
+    # Buttons for each caption
+    if st.button("Python scripting"):
+        if current_stage == "Python scripting":
+            previous_stage, current_stage = None, None
+        else:
+            previous_stage, current_stage = current_stage, "Python scripting"
+            st.session_state.python_scripting_message_visible = not st.session_state.python_scripting_message_visible
+            display_python_scripting_message()
+
+    if st.button("Data collections"):
+        if current_stage == "Data collections":
+            previous_stage, current_stage = None, None
+        else:
+            previous_stage, current_stage = current_stage, "Data collections"
+            st.session_state.data_collections_message_visible = not st.session_state.data_collections_message_visible
+            display_data_collections_message()
+
+    if st.button("MongoDB"):
+        if current_stage == "MongoDB":
+            previous_stage, current_stage = None, None
+        else:
+            previous_stage, current_stage = current_stage, "MongoDB"
+            st.session_state.mongodb_message_visible = not st.session_state.mongodb_message_visible
+            display_mongodb_message()
+
+    if st.button("API Integration"):
+        if current_stage == "API Integration":
+            previous_stage, current_stage = None, None
+        else:
+            previous_stage, current_stage = current_stage, "API Integration"
+            st.session_state.api_integration_message_visible = not st.session_state.api_integration_message_visible
+            display_api_integration_message()
+
+    if st.button("Data Management"):
+        if current_stage == "Data Management":
+            previous_stage, current_stage = None, None
+        else:
+            previous_stage, current_stage = current_stage, "Data Management"
+            st.session_state.data_management_message_visible = not st.session_state.data_management_message_visible
+            display_data_management_message()
+
+    if st.button("Summary"):
+        if current_stage == "Summary":
+            previous_stage, current_stage = None, None
+        else:
+            previous_stage, current_stage = current_stage, "Summary"
+            st.session_state.data_summary_message_visible= not st.session_state.data_summary_message_visible
+            display_summary_message()
     
+if rad == "Data collection":
+
+    st.title(":green[Data collection]")
+
+    channel_id=st.text_input("Enter the channel ID")
+
+    if st.button ("Enter Channel ID"):
+        ch_ids=[]
+        db=client["youtube_data"]
+        coll1=db["channel_details"]
+        for ch_data in coll1.find({},{"_id":0,"channel_information":1}):
+            ch_ids.append(ch_data["channel_information"]["channel_id"])
+            
+        if channel_id in ch_ids:
+            st.success("channel already exist")
+        else:
+            insert=channel_details(channel_id)
+            st.success(insert)
 
 
-channel_id=st.text_input("Enter the channel ID")
+if rad == "Data storing":
 
-if st.button ("collect and store data"):
-    ch_ids=[]
+    all_channels=[]
     db=client["youtube_data"]
-    coll1=db["channel_details"]
-    for ch_data in coll1.find({},{"_id":0,"channel_information":1}):
-        ch_ids.append(ch_data["channel_information"]["channel_id"])
+    coll_1=db["channel_details"]
+    for ch_data in coll_1.find({},{"_id":0,"channel_information":1}):
+        all_channels.append(ch_data["channel_information"]["channel_name"])
+
+    unique_channel=st.selectbox("select the Channel",all_channels)
+
+    st.title(":green[Data storing]")
+
+    if st.button("Store the data to Database"):
+        progress = st.progress(0)
         
-    if channel_id in ch_ids:
-        st.success("channel already exist")
-    else:
-        insert=channel_details(channel_id)
-        st.success(insert)
+        # Update the progress bar without using time.sleep
+        for i in range(100):
+            progress.progress(i + 1)
 
-all_channels=[]
-db=client["youtube_data"]
-coll_1=db["channel_details"]
-for ch_data in coll_1.find({},{"_id":0,"channel_information":1}):
-    all_channels.append(ch_data["channel_information"]["channel_name"])
-
-unique_channel=st.selectbox("select the Channel",all_channels)
-
-if st.button("Insert to Mysql"):
-    Table=tables(unique_channel)
-    st.success(Table)
-
-show_table=st.radio("select the table for view",("Channels","Playlists","Videos","Comments"))
-
-if show_table=="Channels":
-    show_channels() 
-
-elif show_table=="Playlists":
-    show_playlist()
-
-elif show_table=="Videos":
-    show_videos()
-
-elif show_table=="Comments":
-    show_comments()
+        Table=tables(unique_channel)
+        st.success(Table)
 
 
-mydb = mysql.connector.connect(host="127.0.0.1",
-                        user="root",
-                        password="root",
-                        database="youtube", 
-                        port="3306"
-                        )
-cursor=mydb.cursor()
+if rad == "Data viewing":
 
-question=st.selectbox("select your question",("1.What are the names of all the videos and their corresponding channels?",
-                                              "2.Which channels have the most number of videos, and how many videos do they have?",
-                                              "3.What are the top 10 most viewed videos and their respective channels?",
-                                              "4.How many comments were made on each video, and what are their corresponding video names?",
-                                              "5.Which videos have the highest number of likes, and what are their corresponding channel names?",
-                                              "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?",
-                                              "7.What is the total number of views for each channel, and what are their corresponding channel names?",
-                                              "8.What are the names of all the channels that have published videos in the year 2022?",
-                                              "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?",
-                                              "10.Which videos have the highest number of comments, and what are their corresponding channel names?"))
+    st.title(":green[Data viewing]")
 
-if question == "1.What are the names of all the videos and their corresponding channels?":
-    query1='''select title,channel_name from videos '''
-    cursor.execute(query1)
+    show_table = st.selectbox("Select options",["Channels","Playlists","Videos","Comments"])
+    if show_table == "Channels":
+        show_channels()
+    elif show_table == "Playlists":
+        show_playlist()
+    elif show_table == "Videos":
+        show_videos()
+    elif show_table == "Comments":
+        show_comments()
 
-    t1=cursor.fetchall()
+if rad == "Sql queries":
 
-    q1=pd.DataFrame(t1,columns=["videos","channel"])
+    st.title(":[Sql queries]")
 
-    st.write(q1)
-
-elif question == "2.Which channels have the most number of videos, and how many videos do they have?":
-    query2='''select channel_name,Total_videos from youtube.channels where Total_videos = (select max(Total_videos) from youtube.channels)'''
-    cursor.execute(query2)
-
-    t2=cursor.fetchall()
-
-    q2=pd.DataFrame(t2,columns=["channel_name","Total_videos"])
-
-    st.write(q2)
-
-elif question == "3.What are the top 10 most viewed videos and their respective channels?":
-    query3='''select video_id,title,views,channel_name from videos order by views desc limit 10;'''
-    cursor.execute(query3)
-
-    t3=cursor.fetchall()
-
-    q3=pd.DataFrame(t3,columns=["video_id","title","views","channel_name"])
-
-    st.write(q3) 
-
-elif question == "4.How many comments were made on each video, and what are their corresponding video names?":
-    query4='''select comments,title as video_title from videos;'''
-    cursor.execute(query4)
-
-    t4=cursor.fetchall()
-
-    q4=pd.DataFrame(t4,columns=["comments","title"])
-
-    st.write(q4)
-
-elif question == "5.Which videos have the highest number of likes, and what are their corresponding channel names?":
-    query5='''select likes as Highest_likes,title as videotitle,channel_name from videos order by likes desc limit 1;'''
-    cursor.execute(query5)
-
-    t5=cursor.fetchall()
-
-    q5=pd.DataFrame(t5,columns=["Highest_likes","video_title","channel_name"])
-
-    st.write(q5)
-
-elif question == "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?":
-    query6='''select likes as likecount,title as video_title from videos;'''
-    cursor.execute(query6)
-
-    t6=cursor.fetchall()
-
-    q6=pd.DataFrame(t6,columns=["likecount","video_title"])
-
-    st.write(q6)
-
-elif question == "7.What is the total number of views for each channel, and what are their corresponding channel names?":
-    query7='''select channel_name,sum(views) as total_views from videos group by channel_name;'''
-    cursor.execute(query7)
-
-    t7=cursor.fetchall()
-
-    q7=pd.DataFrame(t7,columns=["channel_name","total_views"])
-
-    st.write(q7)
-
-elif question == "8.What are the names of all the channels that have published videos in the year 2022?":
-    query8='''select video_id as video_title,channel_name,published_date from videos where year(published_date)=2022;'''
-    cursor.execute(query8)
-
-    t8=cursor.fetchall()
-
-    q8=pd.DataFrame(t8,columns=["video_title","channel_name","published_date"])
-    
-    st.write(q8)
-
-elif question == "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?":
-    query9='''SELECT channel_name, round(AVG(TIME_TO_SEC(duration))/60,2) Average_duration_minutes FROM  videos GROUP BY channel_name;'''
-    cursor.execute(query9)
-
-    t9=cursor.fetchall()
-
-    q9=pd.DataFrame(t9,columns=["channel_name","Average_duration_minutes"])
-
-    T9=[]
-    for index,row in q9.iterrows():
-        channel_title=row["channel_name"]
-        average_duration_min=row["Average_duration_minutes"]
-        average_duration_str=str(average_duration_min)
-        T9.append(dict(channel_title=channel_title,average_duration_min=average_duration_str)) 
-    x9=pd.DataFrame(T9)
-
-    st.write(x9) 
-
-elif question == "10.Which videos have the highest number of comments, and what are their corresponding channel names?":
-    query10='''select c.video_id,count(c.comment_id) as Highest_comment,v.channel_name from comments as c join videos as v on 
-                c.video_id=v.video_id group by c.video_id order by count(c.comment_id) desc limit 1;'''
-    cursor.execute(query10)
-
-    t10=cursor.fetchall()
-
-    q10=pd.DataFrame(t10,columns=["video_id","Highest_comment","channel_name"])
-    
-    st.write(q10)
+    mydb = mysql.connector.connect(host="127.0.0.1",
+                            user="root",
+                            password="root",
+                            database="youtube", 
+                            port="3306"
+                            )
+    cursor=mydb.cursor()
 
 
+    question=st.selectbox("select your question",("1.What are the names of all the videos and their corresponding channels?",
+                                                "2.Which channels have the most number of videos, and how many videos do they have?",
+                                                "3.What are the top 10 most viewed videos and their respective channels?",
+                                                "4.How many comments were made on each video, and what are their corresponding video names?",
+                                                "5.Which videos have the highest number of likes, and what are their corresponding channel names?",
+                                                "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?",
+                                                "7.What is the total number of views for each channel, and what are their corresponding channel names?",
+                                                "8.What are the names of all the channels that have published videos in the year 2022?",
+                                                "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?",
+                                                "10.Which videos have the highest number of comments, and what are their corresponding channel names?"))
 
+    if question == "1.What are the names of all the videos and their corresponding channels?":
+        query1='''select title,channel_name from videos '''
+        cursor.execute(query1)
 
+        t1=cursor.fetchall()
+
+        q1=pd.DataFrame(t1,columns=["videos","channel"])
+
+        st.write(q1)
+
+    elif question == "2.Which channels have the most number of videos, and how many videos do they have?":
+        query2='''select channel_name,Total_videos from youtube.channels where Total_videos = (select max(Total_videos) from youtube.channels)'''
+        cursor.execute(query2)
+
+        t2=cursor.fetchall()
+
+        q2=pd.DataFrame(t2,columns=["channel_name","Total_videos"])
+
+        st.write(q2)
+
+    elif question == "3.What are the top 10 most viewed videos and their respective channels?":
+        query3='''select video_id,title,views,channel_name from videos order by views desc limit 10;'''
+        cursor.execute(query3)
+
+        t3=cursor.fetchall()
+
+        q3=pd.DataFrame(t3,columns=["video_id","title","views","channel_name"])
+
+        st.write(q3) 
+
+    elif question == "4.How many comments were made on each video, and what are their corresponding video names?":
+        query4='''select comments,title as video_title from videos;'''
+        cursor.execute(query4)
+
+        t4=cursor.fetchall()
+
+        q4=pd.DataFrame(t4,columns=["comments","title"])
+
+        st.write(q4)
+
+    elif question == "5.Which videos have the highest number of likes, and what are their corresponding channel names?":
+        query5='''select likes as Highest_likes,title as videotitle,channel_name from videos order by likes desc limit 1;'''
+        cursor.execute(query5)
+
+        t5=cursor.fetchall()
+
+        q5=pd.DataFrame(t5,columns=["Highest_likes","video_title","channel_name"])
+
+        st.write(q5)
+
+    elif question == "6.What is the total number of likes and dislikes for each video, and what are their corresponding video names?":
+        query6='''select likes as likecount,title as video_title from videos;'''
+        cursor.execute(query6)
+
+        t6=cursor.fetchall()
+
+        q6=pd.DataFrame(t6,columns=["likecount","video_title"])
+
+        st.write(q6)
+
+    elif question == "7.What is the total number of views for each channel, and what are their corresponding channel names?":
+        query7='''select channel_name,sum(views) as total_views from videos group by channel_name;'''
+        cursor.execute(query7)
+
+        t7=cursor.fetchall()
+
+        q7=pd.DataFrame(t7,columns=["channel_name","total_views"])
+
+        st.write(q7)
+
+    elif question == "8.What are the names of all the channels that have published videos in the year 2022?":
+        query8='''select video_id as video_title,channel_name,published_date from videos where year(published_date)=2022;'''
+        cursor.execute(query8)
+
+        t8=cursor.fetchall()
+
+        q8=pd.DataFrame(t8,columns=["video_title","channel_name","published_date"])
+        
+        st.write(q8)
+
+    elif question == "9.What is the average duration of all videos in each channel, and what are their corresponding channel names?":
+        query9='''SELECT channel_name, round(AVG(TIME_TO_SEC(duration))/60,2) Average_duration_minutes FROM  videos GROUP BY channel_name;'''
+        cursor.execute(query9)
+
+        t9=cursor.fetchall()
+
+        q9=pd.DataFrame(t9,columns=["channel_name","Average_duration_minutes"])
+
+        T9=[]
+        for index,row in q9.iterrows():
+            channel_title=row["channel_name"]
+            average_duration_min=row["Average_duration_minutes"]
+            average_duration_str=str(average_duration_min)
+            T9.append(dict(channel_title=channel_title,average_duration_min=average_duration_str)) 
+        x9=pd.DataFrame(T9)
+
+        st.write(x9) 
+
+    elif question == "10.Which videos have the highest number of comments, and what are their corresponding channel names?":
+        query10='''select c.video_id,count(c.comment_id) as Highest_comment,v.channel_name from comments as c join videos as v on 
+                    c.video_id=v.video_id group by c.video_id order by count(c.comment_id) desc limit 1;'''
+        cursor.execute(query10)
+
+        t10=cursor.fetchall()
+
+        q10=pd.DataFrame(t10,columns=["video_id","Highest_comment","channel_name"])
+        
+        st.write(q10)
