@@ -1,7 +1,7 @@
 
-import googleapiclient
+import google-api-python-client
 import pandas as pd
-from googleapiclient.discovery import build
+from google-api-python-client.discovery import build
 import pymongo
 import streamlit as st
 from mysql.connector import connect
