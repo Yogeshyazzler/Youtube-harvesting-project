@@ -1,5 +1,8 @@
 Requirements:
 
+pip install google-api-python-client
+
+
 Tools Required - Visual studio code, Mysql. 
 
 Website Required - https://developers.google.com/youtube/v3,https://cloud.mongodb.com/. 
