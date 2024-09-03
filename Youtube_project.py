@@ -823,8 +823,8 @@ if rad == "Sql queries":
             
             st.write(q10)
 
-except:
-  print("Local DB connection")
+    except:
+      print("Local DB connection")
 
 
 
