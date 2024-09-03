@@ -822,8 +822,8 @@ if rad == "Sql queries":
             
             st.write(q10)
 
-    except:
-        print("Local DB connection, Npt available")
+    except mysql.connector.Error as err:
+    st.error(f"Error: {err}")
 
 
 
