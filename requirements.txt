@@ -1,6 +1,6 @@
 Requirements:
 
-pip install google-api-python-client
+!pip install google-api-python-client
 
 
 Tools Required - Visual studio code, Mysql. 
