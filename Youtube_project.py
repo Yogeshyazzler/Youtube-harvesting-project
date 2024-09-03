@@ -824,7 +824,7 @@ if rad == "Sql queries":
             st.write(q10)
 
     except:
-      print("Local DB connection")
+      print("Local DB connection, Npt available")
 
 
 
